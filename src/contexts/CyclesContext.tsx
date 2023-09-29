@@ -66,6 +66,8 @@ export function CyclesContextProvider({
       }
     },
   )
+  const { cycles, activeCycleID } = cyclesState
+  const activeCycle = cycles.find((cycles) => cycles.id === activeCycleID)
 
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(() => {
     if (activeCycle) {
@@ -74,9 +76,6 @@ export function CyclesContextProvider({
 
     return 0
   })
-
-  const { cycles, activeCycleID } = cyclesState
-  const activeCycle = cycles.find((cycles) => cycles.id === activeCycleID)
 
   useEffect(() => {
     const stateJSON = JSON.stringify(cyclesState)
