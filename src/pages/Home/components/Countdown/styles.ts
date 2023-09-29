@@ -8,6 +8,11 @@ export const CountdownContainer = styled.div`
   display: flex;
   gap: 1rem;
 
+  @media (max-width: 768px) {
+    font-size: 3rem;
+    line-height: 2rem;
+  }
+
   span {
     background-color: ${(props) => props.theme['gray-700']};
     padding: 2rem 1rem;

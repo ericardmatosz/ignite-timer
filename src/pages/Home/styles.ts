@@ -23,6 +23,10 @@ export const Separator = styled.div`
   overflow: hidden;
   display: flex;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    width: 2rem;
+  }
 `
 
 export const BaseStartCountdownButton = styled.button`
