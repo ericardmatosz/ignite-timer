@@ -61,9 +61,7 @@ export function CyclesContextProvider({
         return JSON.parse(storedStateJSON)
       }
 
-      return {
-        initialState,
-      }
+      return initialState
     },
   )
   const { cycles, activeCycleID } = cyclesState
