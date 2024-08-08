@@ -1,48 +1,48 @@
-import { useContext } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { HandPalm, Play } from 'phosphor-react'
+import { HandPalm, Play } from "phosphor-react";
+import { useContext } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as zod from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as zod from "zod";
 
-import { CyclesContext } from '../../contexts/CyclesContext'
+import { CyclesContext } from "../../contexts/CyclesContext";
 
-import { NewCycleForm } from './components/NewCicleForm'
-import { Countdown } from './components/Countdown'
+import { Countdown } from "./components/Countdown";
+import { NewCycleForm } from "./components/NewCicleForm";
 import {
   HomeContainer,
   StartCountdownButton,
   StopCountdownButton,
-} from './styles'
+} from "./styles";
 
 export function Home() {
   const { activeCycle, createNewCycle, interruptCurrentCycle } =
-    useContext(CyclesContext)
+    useContext(CyclesContext);
 
   const newCycleValidationSchema = zod.object({
     task: zod.string().min(1),
     durationTime: zod.number().min(5).max(60),
-  })
+  });
 
-  type newCycleFormData = zod.infer<typeof newCycleValidationSchema>
+  type newCycleFormData = zod.infer<typeof newCycleValidationSchema>;
 
   const newCycleForm = useForm<newCycleFormData>({
     resolver: zodResolver(newCycleValidationSchema),
     defaultValues: {
-      task: '',
+      task: "",
       durationTime: 0,
     },
-  })
+  });
 
-  const { handleSubmit, watch, reset } = newCycleForm
+  const { handleSubmit, watch, reset } = newCycleForm;
 
-  const task = watch('task')
-  const formIsNotValid = !task
+  const task = watch("task");
+  const formIsNotValid = !task;
 
   function handleCreateNewCycle(data: newCycleFormData) {
-    createNewCycle(data)
+    createNewCycle(data);
 
-    reset()
+    reset();
   }
 
   return (
@@ -67,5 +67,5 @@ export function Home() {
         )}
       </form>
     </HomeContainer>
-  )
+  );
 }

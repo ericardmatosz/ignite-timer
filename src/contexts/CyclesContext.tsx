@@ -1,47 +1,42 @@
 // Import Libs, components and functions
 
+import { differenceInSeconds } from "date-fns";
 import {
   ReactNode,
   createContext,
-  useState,
-  useReducer,
   useEffect,
-} from 'react'
-import { differenceInSeconds } from 'date-fns'
-
+  useReducer,
+  useState,
+} from "react";
 import {
   addNewCycleAction,
   interruptNewCycleAction,
   markCurrentCycleAsFinishedAction,
-} from '../reducers/actions'
-import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
-
-// Interfaces
+} from "../reducers/actions";
+import { Cycle, cyclesReducer } from "../reducers/cycles/reducer";
 
 interface createCycleData {
-  task: string
-  minutesAmount?: number
-  durationTime: number
+  task: string;
+  minutesAmount?: number;
+  durationTime: number;
 }
 
 interface CyclesContextType {
-  cycles: Cycle[]
-  activeCycle: Cycle | undefined
-  activeCycleID: string | null
-  amountSecondsPassed: number
-  setSecondsPassed: (seconds: number) => void
-  markCurrentCycleAsFinished: () => void
-  createNewCycle: (data: createCycleData | undefined) => void
-  interruptCurrentCycle: () => void
+  cycles: Cycle[];
+  activeCycle: Cycle | undefined;
+  activeCycleID: string | null;
+  amountSecondsPassed: number;
+  setSecondsPassed: (seconds: number) => void;
+  markCurrentCycleAsFinished: () => void;
+  createNewCycle: (data: createCycleData | undefined) => void;
+  interruptCurrentCycle: () => void;
 }
 
 interface CyclesContextProviderProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
-export const CyclesContext = createContext({} as CyclesContextType)
-
-// Context Provider
+export const CyclesContext = createContext({} as CyclesContextType);
 
 export function CyclesContextProvider({
   children,
@@ -54,43 +49,44 @@ export function CyclesContextProvider({
     },
     (initialState) => {
       const storedStateJSON = localStorage.getItem(
-        '@igite-timer:cycles-state-1.0.0',
-      )
+        "@igite-timer:cycles-state-1.0.0"
+      );
 
       if (storedStateJSON) {
-        return JSON.parse(storedStateJSON)
+        return JSON.parse(storedStateJSON);
       }
 
-      return initialState
-    },
-  )
-  const { cycles, activeCycleID } = cyclesState
-  const activeCycle = cycles.find((cycles) => cycles.id === activeCycleID)
+      return initialState;
+    }
+  );
+
+  const { cycles, activeCycleID } = cyclesState;
+  const activeCycle = cycles.find((cycles) => cycles.id === activeCycleID);
 
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(() => {
     if (activeCycle) {
-      return differenceInSeconds(new Date(), new Date(activeCycle.startDate))
+      return differenceInSeconds(new Date(), new Date(activeCycle.startDate));
     }
 
-    return 0
-  })
+    return 0;
+  });
 
   useEffect(() => {
-    const stateJSON = JSON.stringify(cyclesState)
+    const stateJSON = JSON.stringify(cyclesState);
 
-    localStorage.setItem('@igite-timer:cycles-state-1.0.0', stateJSON)
-  }, [cyclesState])
+    localStorage.setItem("@igite-timer:cycles-state-1.0.0", stateJSON);
+  }, [cyclesState]);
 
   function markCurrentCycleAsFinished() {
-    dispatch(markCurrentCycleAsFinishedAction())
+    dispatch(markCurrentCycleAsFinishedAction());
   }
 
   function setSecondsPassed(seconds: number) {
-    setAmountSecondsPassed(seconds)
+    setAmountSecondsPassed(seconds);
   }
 
   function createNewCycle(data: createCycleData | undefined) {
-    const id = String(new Date().getTime())
+    const id = String(new Date().getTime());
 
     if (data) {
       const newCycle: Cycle = {
@@ -98,16 +94,15 @@ export function CyclesContextProvider({
         task: data.task,
         minutes: data.durationTime,
         startDate: new Date(),
-      }
+      };
 
-      dispatch(addNewCycleAction(newCycle))
-
-      setAmountSecondsPassed(0)
+      dispatch(addNewCycleAction(newCycle));
+      setAmountSecondsPassed(0);
     }
   }
 
   function interruptCurrentCycle() {
-    dispatch(interruptNewCycleAction())
+    dispatch(interruptNewCycleAction());
   }
 
   return (
@@ -125,5 +120,5 @@ export function CyclesContextProvider({
     >
       {children}
     </CyclesContext.Provider>
-  )
+  );
 }

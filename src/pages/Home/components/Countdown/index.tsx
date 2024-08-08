@@ -1,8 +1,8 @@
-import { useContext, useEffect } from 'react'
-import { differenceInSeconds } from 'date-fns'
-import { CountdownContainer } from './styles'
-import { Separator } from '../../styles'
-import { CyclesContext } from '../../../../contexts/CyclesContext'
+import { differenceInSeconds } from "date-fns";
+import { useContext, useEffect } from "react";
+import { CyclesContext } from "../../../../contexts/CyclesContext";
+import { Separator } from "../../styles";
+import { CountdownContainer } from "./styles";
 
 export function Countdown() {
   const {
@@ -11,54 +11,52 @@ export function Countdown() {
     markCurrentCycleAsFinished,
     amountSecondsPassed,
     setSecondsPassed,
-  } = useContext(CyclesContext)
+  } = useContext(CyclesContext);
 
-  const totalSeconds = activeCycle ? activeCycle.minutes * 60 : 0
-  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
-  const minutesAmount = Math.floor(currentSeconds / 60)
-  const secondsAmount = currentSeconds % 60
+  const totalSeconds = activeCycle ? activeCycle.minutes * 60 : 0;
+  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
+  const minutesAmount = Math.floor(currentSeconds / 60);
+  const secondsAmount = currentSeconds % 60;
 
-  const minutes = String(minutesAmount).padStart(2, '0')
-  const seconds = String(secondsAmount).padStart(2, '0')
+  const minutes = String(minutesAmount).padStart(2, "0");
+  const seconds = String(secondsAmount).padStart(2, "0");
 
   useEffect(() => {
     if (activeCycle) {
-      document.title = `${minutes}:${seconds}`
+      document.title = `${minutes}:${seconds}`;
     }
-  }, [minutes, seconds, activeCycle])
+  }, [minutes, seconds, activeCycle]);
 
   useEffect(() => {
-    let interval: number
+    let interval: number;
 
     if (activeCycle) {
       interval = setInterval(() => {
         const secondDifference = differenceInSeconds(
           new Date(),
-          new Date(activeCycle.startDate),
-        )
+          new Date(activeCycle.startDate)
+        );
 
         if (secondDifference >= totalSeconds) {
-          markCurrentCycleAsFinished()
-
-          setSecondsPassed(totalSeconds)
-
-          clearInterval(interval)
+          markCurrentCycleAsFinished();
+          setSecondsPassed(totalSeconds);
+          clearInterval(interval);
         } else {
-          setSecondsPassed(secondDifference)
+          setSecondsPassed(secondDifference);
         }
-      }, 1000)
+      }, 1000);
     }
 
     return () => {
-      clearInterval(interval)
-    }
+      clearInterval(interval);
+    };
   }, [
     activeCycle,
     totalSeconds,
     activeCycleID,
     markCurrentCycleAsFinished,
     setSecondsPassed,
-  ])
+  ]);
 
   return (
     <CountdownContainer>
@@ -68,5 +66,5 @@ export function Countdown() {
       <span>{seconds[0]}</span>
       <span>{seconds[1]}</span>
     </CountdownContainer>
-  )
+  );
 }
